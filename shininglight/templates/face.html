@@ -41,7 +41,7 @@
                         if(faces.length>=1){
                             is_stop = true;
                             draw_face_box(faces)
-                            //upload(base64)
+                            upload(base64)
 
                         }
                         //console.log(faces)
@@ -51,7 +51,6 @@
 
     
     function draw_face_box(faces) {
-        console.log("box")
                 var rect;
                 var i;
                 //context.clearRect(0, 0, canvas.width, canvas.height);
@@ -71,8 +70,8 @@
     function upload(base64) {
         $.ajax({
                 "type":"POST",
-                "url":"/upload.php",
-                "data":{'img':base64},
+                "url":"/store",
+                "data":{img:base64},
                 'dataType':'json',
                 beforeSend:function(){},
                 success:function(result){
