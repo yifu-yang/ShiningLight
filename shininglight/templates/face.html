@@ -8,7 +8,9 @@
         <div class="booth" style="position: absolute;left:50%;top:50%;transform:translate(-50%,-50%); ">
             <video id="video" width="400" height="300" muted class="abs" ></video>
             <canvas id="canvas" width="400" height="300"></canvas>
+            <input id="username" type="text"/>
             <button id="detect">detect</button>
+            <button id="search">search</button>
             <button id="restart">restart</button>
           </div>
     </body>
@@ -40,8 +42,8 @@
                     complete: function (faces) {
                         if(faces.length>=1){
                             is_stop = true;
-                            draw_face_box(faces)
-                            upload(base64)
+                            //draw_face_box(faces)
+                            //upload(base64)
 
                         }
                         //console.log(faces)
@@ -64,6 +66,7 @@
                     context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
                     context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
                 }
+                is_stop = true;
             }
 
             //上传人脸图片
@@ -71,32 +74,40 @@
         $.ajax({
                 "type":"POST",
                 "url":"/store",
+                "data":{img:base64,username:$("#username").val()},
+                'dataType':'json',
+                beforeSend:function(){},
+                success:function(result){
+                    console.log(result)
+                    alert(result)
+                    }
+                });
+            }
+    function search(base64) {
+        $.ajax({
+                "type":"POST",
+                "url":"/search",
                 "data":{img:base64},
                 'dataType':'json',
                 beforeSend:function(){},
                 success:function(result){
                     console.log(result)
-                    img_path = result.data.file_path
+                    alert(result)
                     }
                 });
             }
     $("#restart").on("click",function(e){
         is_stop = false
     })
-    /*$("#detect").on("click",function(e){
-        context.drawImage(video, 0, 0, video.width, video.height);
-                var base64 = canvas.toDataURL('images/png');
-                $('#canvas').faceDetection({
-                    complete: function (faces) {
-                        if(faces.length>=1){
-                            is_stop = true;
-                            draw_face_box(faces)
-                            //upload(base64)
-
-                        }
-                        //console.log(faces)
-                    }
-                });
-    })*/
+    $("#detect").on("click",function(e){
+        //context.drawImage(video, 0, 0, video.width, video.height);
+        var base64 = canvas.toDataURL('images/png');
+        upload(base64);
+    })
+    $("#search").on("click",function(e){
+        //context.drawImage(video, 0, 0, video.width, video.height);
+        var base64 = canvas.toDataURL('images/png');
+        search(base64)
+    })
     </script>
 </html>
